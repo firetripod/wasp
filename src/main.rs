@@ -1,6 +1,6 @@
-use std::fs::metadata;
 use failure::Error;
 use std::env;
+use std::fs::metadata;
 use std::fs::File;
 use std::io::prelude::*;
 #[macro_use]
@@ -82,14 +82,13 @@ fn main() -> Result<(), Error> {
     if let Some(_matches) = matches.subcommand_matches("build") {
         use walkdir::WalkDir;
 
-
         let mut files = vec![];
         for entry in WalkDir::new("./") {
             let entry = entry.unwrap();
-            let f =  entry.path().display().to_string();
+            let f = entry.path().display().to_string();
             if f.ends_with(".w") {
                 let md = metadata(f.clone()).unwrap();
-                if  md.is_file() {
+                if md.is_file() {
                     files.push(f);
                 }
             }
@@ -107,24 +106,29 @@ fn main() -> Result<(), Error> {
         }
 
         files.sort_by(|a, b| {
-                if a.starts_with("./vendor/") {
-                    if b.starts_with("./vendor/") {
-                        let sa = a.split('/').collect::<Vec<&str>>()[2];
-                        let sb = b.split('/').collect::<Vec<&str>>()[2];
-                        let pa = packages.iter().position(|r| r == sa).unwrap_or(std::usize::MAX);
-                        let pb = packages.iter().position(|r| r == sb).unwrap_or(std::usize::MAX);
-                        return pa.cmp(&pb);
-                    }
-                    return std::cmp::Ordering::Less;
+            if a.starts_with("./vendor/") {
+                if b.starts_with("./vendor/") {
+                    let sa = a.split('/').collect::<Vec<&str>>()[2];
+                    let sb = b.split('/').collect::<Vec<&str>>()[2];
+                    let pa = packages
+                        .iter()
+                        .position(|r| r == sa)
+                        .unwrap_or(std::usize::MAX);
+                    let pb = packages
+                        .iter()
+                        .position(|r| r == sb)
+                        .unwrap_or(std::usize::MAX);
+                    return pa.cmp(&pb);
                 }
-                 std::cmp::Ordering::Equal
+                return std::cmp::Ordering::Less;
+            }
+            std::cmp::Ordering::Equal
         });
-
 
         let mut contents = "".to_string();
         for file in files {
             let c = std::fs::read_to_string(&file).unwrap();
-            contents = format!("{}\n{}",&contents,&c).to_string();
+            contents = format!("{}\n{}", &contents, &c).to_string();
         }
 
         let output = run(&contents)?;
@@ -143,7 +147,7 @@ fn main() -> Result<(), Error> {
                 file.write_all(include_bytes!("static/project.wasp"))?;
                 let mut file = File::create(format!("{}/{}", f, "index.html"))?;
                 let mut idx = include_str!("static/index.html").to_string();
-                idx = idx.replace("PROJECT_NAME",&f);
+                idx = idx.replace("PROJECT_NAME", &f);
                 file.write_all((&idx).as_bytes())?;
                 println!("created package");
             } else {
@@ -189,7 +193,7 @@ fn main() -> Result<(), Error> {
                 .args(&["clone", v[1], &format!("vendor/{}", v[0])])
                 .output()
                 .expect("failed to execute process");
-            println!("vendoring \"{}\"",v[0]);
+            println!("vendoring \"{}\"", v[0]);
         }
     }
 

@@ -372,8 +372,7 @@ impl Compiler {
         let final_heap_pos = {
             if self.heap_position % 4 != 0 {
                 (self.heap_position / 4) * 4 + 4
-            }
-            else {
+            } else {
                 self.heap_position
             }
         };
@@ -407,7 +406,10 @@ impl Compiler {
         // look this up in reverse so shadowing works
         let mut p = self.local_names.iter().rev().position(|r| r == id);
         if p.is_some() {
-            return (self.local_names.len() as i32 - 1 - p.unwrap() as i32, IdentifierType::Local);
+            return (
+                self.local_names.len() as i32 - 1 - p.unwrap() as i32,
+                IdentifierType::Local,
+            );
         }
         p = self.global_names.iter().position(|r| r == id);
         if p.is_some() {
@@ -417,10 +419,7 @@ impl Compiler {
     }
 
     fn process_wasm(&mut self, i: usize, e: &[WasmOperation]) {
-        let wasm = e
-            .iter()
-            .filter_map(|x| to_wasm(x.clone()))
-            .collect();
+        let wasm = e.iter().filter_map(|x| to_wasm(x.clone())).collect();
         self.function_implementations[i].with_instructions(wasm);
     }
 
@@ -428,12 +427,12 @@ impl Compiler {
     fn process_expression(&mut self, i: usize, e: &Expression) {
         match e {
             Expression::Let(x) => {
-                for j in 0..x.bindings.len(){
+                for j in 0..x.bindings.len() {
                     let binding = &x.bindings[j];
                     self.process_expression(i, &binding.1);
                     self.function_implementations[i].with_local(DataType::I32);
                     self.function_implementations[i]
-                        .with_instructions(vec![LOCAL_SET,(self.local_names.len() as u32).into()]);
+                        .with_instructions(vec![LOCAL_SET, (self.local_names.len() as u32).into()]);
                     self.local_names.push((&binding.0).to_string());
                 }
                 for k in 0..x.expressions.len() {

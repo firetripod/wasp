@@ -69,6 +69,8 @@ Using [wasm-module](https://github.com/richardanaya/wasm-module) we can easily d
 )
 ```
 
+See it working [here](https://wasplang.github.io/wasp/examples/canvas/index.html)
+
 # Mutable Global Data
 
 It's often important for a web assembly modules to have some sort of global data that can be changed.  For instance in a game we might have a high score.

@@ -7,6 +7,7 @@ use wasmly::*;
 enum IdentifierType {
     Global,
     Local,
+    Function,
 }
 
 fn to_wasm(op: WasmOperation) -> Option<WebAssembly> {
@@ -411,6 +412,10 @@ impl Compiler {
                 IdentifierType::Local,
             );
         }
+        p = self.function_names.iter().position(|r| r == id);
+        if p.is_some() {
+            return (p.unwrap() as i32, IdentifierType::Function);
+        }
         p = self.global_names.iter().position(|r| r == id);
         if p.is_some() {
             return (self.global_values[p.unwrap()], IdentifierType::Global);
@@ -680,15 +685,7 @@ impl Compiler {
                         I32_NE,
                     ]);
                 } else {
-                    let f = self
-                        .function_names
-                        .iter()
-                        .position(|r| r == &x.function_name);
-                    let function_handle = if f.is_some() {
-                        f.unwrap() as u32
-                    } else {
-                        panic!(format!("unknown function {}", &x.function_name))
-                    };
+                    let (function_handle,_) = self.resolve_identifier( &x.function_name);
                     for k in 0..x.params.len() {
                         self.process_expression(i, &x.params[k])
                     }
@@ -710,6 +707,10 @@ impl Compiler {
                     IdentifierType::Local => {
                         self.function_implementations[i]
                             .with_instructions(vec![LOCAL_GET, val.0.into()]);
+                    }
+                    IdentifierType::Function => {
+                        self.function_implementations[i]
+                            .with_instructions(vec![I32_CONST, val.0.into()]);
                     }
                 }
             }

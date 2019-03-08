@@ -141,6 +141,10 @@ fn main() -> Result<(), Error> {
                 file.write_all(include_bytes!("static/main.w"))?;
                 let mut file = File::create(format!("{}/{}", f, "project.wasp"))?;
                 file.write_all(include_bytes!("static/project.wasp"))?;
+                let mut file = File::create(format!("{}/{}", f, "index.html"))?;
+                let mut idx = include_str!("static/index.html").to_string();
+                idx = idx.replace("PROJECT_NAME",&f);
+                file.write_all((&idx).as_bytes())?;
                 println!("created package");
             } else {
                 println!("directory \"{}\" already exists", f);

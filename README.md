@@ -10,10 +10,6 @@ a LISP programming language for extremely performant and concise web assembly mo
   (console_log "Hello World!")
 )
 ```
-```console
-wasp build
-```
-
 
 # Features
 * [x] immutable c-strings, memory manipulation, global variables, imported functions
@@ -37,8 +33,10 @@ cargo install wasp
 wasp init myproject
 cd myproject
 wasp build
+wasp build
+http-server -p 8080 .
 ```
-At this point we will have a web assembly module with a single exported main function and nothing else
+At this point we will have a web assembly module with a single exported main function and nothing else. Open up http://localhost:8080
 
 ```
 wasp add std https://github.com/wasmlang/std.git
@@ -218,6 +216,6 @@ Wasp prefers to keep as little in the core functionality as possible, letting th
 </p>
 
 * all functions (including extern functions) return a value, if no obvious return, it is an empty value `()`
-* Web assembly global 0 is initialized to the end of the static data section (which might also be the start of a heap for a memory allocator). This value is immutable. 
+* Web assembly global 0 is initialized to the end of the static data section (which might also be the start of a heap for a memory allocator). This value is immutable.
 * Web assembly global lobal 1 also is initialized to the end of the static data section. This value is mutable and might be used to represent the end of your heap. Check out the [simple allocator example](https://github.com/richardanaya/wasp/blob/master/examples/malloc/main.w).
 * Literal strings create initialize data of a c-string at the front of your memory, and can be passed around as pointers to the very start in memory to your text. A \0 is automatically added at compile time, letting you easily have a marker to denote the end of your text.

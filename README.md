@@ -82,15 +82,6 @@ It's often important for a web assembly modules to have some sort of global data
   ...
 )
 ```
-```
-wasp build
-```
-```
-<script src="https://unpkg.com/@webcomponents/webcomponentsjs@latest/webcomponents-loader.js"></script>
-<script src="https://unpkg.com/wasm-module@latest/wasm-module.min.js"></script>
-<canvas id="screen" width="500" height="200"></canvas>
-<wasm-module src="canvas.wasm"></wasm-module>
-```
 
 # Project Management
 **warning: this may change but it works**

@@ -254,12 +254,10 @@ impl Compiler {
             .ast
             .children
             .iter()
-            .map(|x| match x {
+            .filter_map(|x| match x {
                 TopLevelOperation::ExternalFunction(x) => Some(x),
                 _ => None,
             })
-            .filter(|x| x.is_some())
-            .map(|x| x.unwrap())
             .collect::<Vec<&ExternalFunction>>();
 
         let mut imports = vec![];
@@ -276,13 +274,11 @@ impl Compiler {
             .ast
             .children
             .iter()
-            .map(|x| match x {
+            .filter_map(|x| match x {
                 TopLevelOperation::DefineFunction(_) => Some(x.clone()),
                 TopLevelOperation::DefineWasmFunction(_) => Some(x.clone()),
                 _ => None,
             })
-            .filter(|x| x.is_some())
-            .map(|x| x.unwrap().clone())
             .collect::<Vec<TopLevelOperation>>();
 
         self.wasm.add_table(wasmly::Table::new(5, 5));
@@ -293,12 +289,10 @@ impl Compiler {
             .ast
             .children
             .iter()
-            .map(|x| match x {
+            .filter_map(|x| match x {
                 TopLevelOperation::DefineGlobal(x) => Some(x),
                 _ => None,
             })
-            .filter(|x| x.is_some())
-            .map(|x| x.unwrap().clone())
             .collect::<Vec<crate::ast::Global>>();
         for def in global_defs {
             self.global_names.push(def.name.clone());
@@ -425,9 +419,7 @@ impl Compiler {
     fn process_wasm(&mut self, i: usize, e: &[WasmOperation]) {
         let wasm = e
             .iter()
-            .map(|x| to_wasm(x.clone()))
-            .filter(|x| x.is_some())
-            .map(|x| x.unwrap())
+            .filter_map(|x| to_wasm(x.clone()))
             .collect();
         self.function_implementations[i].with_instructions(wasm);
     }

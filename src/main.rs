@@ -60,13 +60,16 @@ fn main() -> Result<(), Error> {
         .subcommand(
             SubCommand::with_name("init")
                 .about("initialize a directory to be a wasp project")
-                .arg(Arg::with_name("NAME").help("Name of project to create folder for").required(true))
+                .arg(
+                    Arg::with_name("NAME")
+                        .help("Name of project to create folder for")
+                        .required(true),
+                )
                 .arg(
                     Arg::with_name("no-std")
                         .long("no-std")
                         .help("don't add the standard library"),
                 ),
-
         )
         .subcommand(SubCommand::with_name("vendor").about("fetch dependencies"))
         .subcommand(
@@ -158,7 +161,11 @@ fn main() -> Result<(), Error> {
                 let no_std = matches.is_present("no-std");
                 if !no_std {
                     std::process::Command::new("git")
-                        .args(&["clone", "git@github.com:wasplang/std.git", &format!("{}/vendor/{}", f,"std")])
+                        .args(&[
+                            "clone",
+                            "git@github.com:wasplang/std.git",
+                            &format!("{}/vendor/{}", f, "std"),
+                        ])
                         .output()
                         .expect("failed to execute process");
                     println!("added standard library");

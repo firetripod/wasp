@@ -685,7 +685,7 @@ impl Compiler {
                         I32_NE,
                     ]);
                 } else {
-                    let (function_handle,_) = self.resolve_identifier( &x.function_name);
+                    let (function_handle, _) = self.resolve_identifier(&x.function_name);
                     for k in 0..x.params.len() {
                         self.process_expression(i, &x.params[k])
                     }

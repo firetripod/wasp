@@ -290,7 +290,7 @@ impl Compiler {
             .children
             .iter()
             .filter_map(|x| match x {
-                TopLevelOperation::DefineGlobal(x) => Some(x),
+                TopLevelOperation::DefineGlobal(x) => Some(x.clone()),
                 _ => None,
             })
             .collect::<Vec<crate::ast::Global>>();

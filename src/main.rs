@@ -21,7 +21,7 @@ fn write_output(bytes: &[u8], output_file: Option<&str>) -> std::io::Result<()> 
             String::from(path.file_name().unwrap().to_str().unwrap())
         );
         let mut buffer = File::create(output_file)?;
-        buffer.write(bytes)?;
+        buffer.write_all(bytes)?;
     }
     Ok(())
 }
@@ -109,8 +109,8 @@ fn main() -> Result<(), Error> {
         files.sort_by(|a, b| {
                 if a.starts_with("./vendor/") {
                     if b.starts_with("./vendor/") {
-                        let sa = a.split("/").collect::<Vec<&str>>()[2];
-                        let sb = b.split("/").collect::<Vec<&str>>()[2];
+                        let sa = a.split('/').collect::<Vec<&str>>()[2];
+                        let sb = b.split('/').collect::<Vec<&str>>()[2];
                         let pa = packages.iter().position(|r| r == sa).unwrap_or(std::usize::MAX);
                         let pb = packages.iter().position(|r| r == sb).unwrap_or(std::usize::MAX);
                         return pa.cmp(&pb);
@@ -122,8 +122,8 @@ fn main() -> Result<(), Error> {
 
 
         let mut contents = "".to_string();
-        for f in 0..files.len(){
-            let c = std::fs::read_to_string(&files[f]).unwrap();
+        for file in files {
+            let c = std::fs::read_to_string(&file).unwrap();
             contents = format!("{}\n{}",&contents,&c).to_string();
         }
 
@@ -151,9 +151,9 @@ fn main() -> Result<(), Error> {
                 std::process::exit(1);
             }
         } else {
-            let mut file = File::create(format!("{}", "main.w"))?;
+            let mut file = File::create("main.w".to_string())?;
             file.write_all(include_bytes!("static/main.w"))?;
-            let mut file = File::create(format!("{}", "project.wasp"))?;
+            let mut file = File::create("project.wasp".to_string())?;
             file.write_all(include_bytes!("static/project.wasp"))?;
             println!("created package");
         }
@@ -179,7 +179,7 @@ fn main() -> Result<(), Error> {
         println!("added dependency");
     }
 
-    if let Some(_) = matches.subcommand_matches("vendor") {
+    if matches.subcommand_matches("vendor").is_some() {
         std::fs::remove_dir_all("vendor")?;
         let file = File::open("project.wasp")?;
         for line in BufReader::new(file).lines() {

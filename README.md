@@ -39,7 +39,7 @@ http-server -p 8080 .
 At this point we will have a web assembly module with a single exported main function and nothing else. Open up http://localhost:8080
 
 ```
-wasp add std https://github.com/wasmlang/std.git
+wasp add std git@github.com:wasplang/std.git
 wasp build
 ```
 At this point we will have a web assembly module that has alot more access to the [standard libraries](https://github.com/wasplang/std) functions and a default.
@@ -67,6 +67,8 @@ Using [wasm-module](https://github.com/richardanaya/wasm-module) we can easily d
 )
 ```
 
+See it working [here](https://wasplang.github.io/wasp/examples/canvas/index.html)
+
 # Mutable Global Data
 
 It's often important for a web assembly modules to have some sort of global data that can be changed.  For instance in a game we might have a high score.
@@ -82,22 +84,19 @@ It's often important for a web assembly modules to have some sort of global data
 ```
 
 # Project Management
-Code dependencies are kept in a special folder called `vendor` which is populated by:
-* copies of other folders on your system
-* specific checkouts of git repositories.
+**warning: this may change but it works**
+Code dependencies are kept in a special folder called `vendor` which is populated by specific checkouts of git repositories.
 
 For example a `project.wasp` containing:
 
 ```
-foo = ../../foo
-bar = git@github.com:richardanaya/bar.git@specific-bar
+bar git@github.com:richardanaya/bar.git@specific-bar
 ```
 
 would result in these commands (roughly)
 
 ```
 mkdir vendor
-cp -R ../../foo vendor/foo
 git clone git@github.com:richardanaya/bar.git@specific-bar vendor/bar
 ```
 
@@ -107,39 +106,9 @@ Now, when wasp compiles your code, it does a few things.
 
 * In order specified by your `project.wasp`, one folder at a time all files ending in .w are loaded from each `vendor/<dependency-name>` and its subfolders.
 * all files in the current directory and sub directories not in `vendor` are loaded
-* as files are loaded, functions with same name as previous functions shadow the previous.
+* then everything is compiled in order
 
-For example with `project.wasp`
-
-```
-foo = git@github.com:richardanaya/foo.git
-```
-
-assume my package `foo` has a function in its file at `vendor/foo/foo.w`:
-
-```clojure
-...
-(defn foo [] 123)
-...
-```
-
-in my `main.w` I also have a `foo` function:
-
-```clojure
-...
-(defn foo [] 42)
-...
-```
-
-because the vendor files are loaded in order before the `main.w` file in my project, I can override behavior from my vendor files resulting in a `foo` that returns 42 in my compile code.
-
-This puts an onus on package makers to use good function names that properly include the namespace your package, but also gives the flexability to override very deep behavior pretty much anywhere.
-
-```
-wasp build --verbose
-```
-
-Can help you see what is shadowed if you have concerns.
+Please try to use non conflicting names in meantime while this is fleshed out for 0.2.0
 
 # Advanced
 When necessary, low level web assembly can be directly inlined

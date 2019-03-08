@@ -58,7 +58,7 @@ named!(
 named!(
     function_identifiers<CompleteStr,String>,
     do_parse!(
-        id: alt!(map!(tag!("do"),to_string)|map!(tag!("if"),to_string)|map!(tag!("loop"),to_string)|map!(tag!("break"),to_string)|map!(tag!("continue"),to_string)|token_identifier|map!(tag!(">>"),to_string)|map!(tag!("<<"),to_string)|map!(tag!(">="),to_string)|map!(tag!("<="),to_string)|map!(tag!(">"),to_string)|map!(tag!("<"),to_string)|map!(tag!("||"),to_string)|map!(tag!("&&"),to_string)|map!(tag!("!="),to_string)|map!(tag!("=="),to_string)|map!(tag!("+"),to_string)|map!(tag!("-"),to_string)|map!(tag!("*"),to_string)|map!(tag!("/"),to_string)|map!(tag!("%"),to_string)|map!(tag!("|"),to_string)|map!(tag!("&"),to_string)|map!(tag!("^"),to_string)|map!(tag!("~"),to_string)|map!(tag!("!"),to_string))>>
+        id: alt!(token_identifier|map!(tag!("do"),to_string)|map!(tag!("if"),to_string)|map!(tag!("loop"),to_string)|map!(tag!("break"),to_string)|map!(tag!("continue"),to_string)|map!(tag!(">>"),to_string)|map!(tag!("<<"),to_string)|map!(tag!(">="),to_string)|map!(tag!("<="),to_string)|map!(tag!(">"),to_string)|map!(tag!("<"),to_string)|map!(tag!("||"),to_string)|map!(tag!("&&"),to_string)|map!(tag!("!="),to_string)|map!(tag!("=="),to_string)|map!(tag!("+"),to_string)|map!(tag!("-"),to_string)|map!(tag!("*"),to_string)|map!(tag!("/"),to_string)|map!(tag!("%"),to_string)|map!(tag!("|"),to_string)|map!(tag!("&"),to_string)|map!(tag!("^"),to_string)|map!(tag!("~"),to_string)|map!(tag!("!"),to_string))>>
         (id)
     )
 );

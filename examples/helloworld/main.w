@@ -1,6 +1,6 @@
 (extern console_log [message])
-(defn b [f]
+(defn do_it [f]
   (f "hello world123!"))
 
 (defn main "main" [msg]
-  (b console_log))
+  (do_it console_log))

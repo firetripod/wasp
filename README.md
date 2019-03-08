@@ -34,13 +34,15 @@ cd myproject
 wasp build
 http-server -p 8080 .
 ```
-At this point we will have a web assembly module with a single exported main function and nothing else. Open up http://localhost:8080 and look in console.
+Open up http://localhost:8080 and look in console. At this point we will have a web assembly module that has access to the [standard libraries](https://github.com/wasplang/std) functions.  More to come in this area!
+
+If you don't have need for the standard library (or want to write your own!). This is also an option.
 
 ```
-wasp add std git@github.com:wasplang/std.git
-wasp build
+wasp init myproject --no-std
 ```
-At this point we will have a web assembly module that has alot more access to the [standard libraries](https://github.com/wasplang/std) functions.  More to come in this area!
+
+At this point we will have a web assembly module with a single exported main function and nothing else.
 
 # Drawing
 

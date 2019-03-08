@@ -60,7 +60,13 @@ fn main() -> Result<(), Error> {
         .subcommand(
             SubCommand::with_name("init")
                 .about("initialize a directory to be a wasp project")
-                .arg(Arg::with_name("NAME").help("Name of project to create folder for")),
+                .arg(Arg::with_name("NAME").help("Name of project to create folder for").required(true))
+                .arg(
+                    Arg::with_name("no-std")
+                        .long("no-std")
+                        .help("don't add the standard library"),
+                ),
+
         )
         .subcommand(SubCommand::with_name("vendor").about("fetch dependencies"))
         .subcommand(
@@ -149,17 +155,19 @@ fn main() -> Result<(), Error> {
                 let mut idx = include_str!("static/index.html").to_string();
                 idx = idx.replace("PROJECT_NAME", &f);
                 file.write_all((&idx).as_bytes())?;
+                let no_std = matches.value_of("no-std");
+                if no_std.is_none() {
+                    std::process::Command::new("git")
+                        .args(&["clone", "git@github.com:wasplang/std.git", &format!("{}/vendor/{}", f,"std")])
+                        .output()
+                        .expect("failed to execute process");
+                    println!("added standard library");
+                }
                 println!("created package");
             } else {
                 println!("directory \"{}\" already exists", f);
                 std::process::exit(1);
             }
-        } else {
-            let mut file = File::create("main.w".to_string())?;
-            file.write_all(include_bytes!("static/main.w"))?;
-            let mut file = File::create("project.wasp".to_string())?;
-            file.write_all(include_bytes!("static/project.wasp"))?;
-            println!("created package");
         }
         return Ok(());
     };

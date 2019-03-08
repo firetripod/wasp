@@ -1,3 +1,2 @@
 (defn main "main" []
-  42
-)
+  42)

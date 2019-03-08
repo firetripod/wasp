@@ -33,7 +33,6 @@ cargo install wasp
 wasp init myproject
 cd myproject
 wasp build
-wasp build
 http-server -p 8080 .
 ```
 At this point we will have a web assembly module with a single exported main function and nothing else. Open up http://localhost:8080 and look in console.

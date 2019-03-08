@@ -58,7 +58,7 @@ Using [wasm-module](https://github.com/richardanaya/wasm-module) we can easily d
         document (Window_get_document window)
         canvas (Document_querySelector document "#screen")
         ctx (HTMLCanvasElement_getContext canvas "2d")]
-      (CanvasRenderingContext2D_fillRect ctx 0 0 50 50)))
+    (CanvasRenderingContext2D_fillRect ctx 0 0 50 50)))
 ```
 
 See it working [here](https://wasplang.github.io/wasp/examples/canvas/index.html)

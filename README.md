@@ -7,8 +7,7 @@ a LISP programming language for extremely performant and concise web assembly mo
 ; main.w
 (extern console_log [message])
 (defn main "main" []
-  (console_log "Hello World!")
-)
+  (console_log "Hello World!"))
 ```
 
 # Features
@@ -55,15 +54,11 @@ Using [wasm-module](https://github.com/richardanaya/wasm-module) we can easily d
 (extern CanvasRenderingContext2D_fillRect [canvas x y w h])
 
 (defn main "main" []
-  (let [
-      window (global_getWindow)
-      document (Window_get_document window)
-      canvas (Document_querySelector document "#screen")
-      ctx (HTMLCanvasElement_getContext canvas "2d")
-    ]
-      (CanvasRenderingContext2D_fillRect ctx 0 0 50 50)
-    )
-)
+  (let [window (global_getWindow)
+        document (Window_get_document window)
+        canvas (Document_querySelector document "#screen")
+        ctx (HTMLCanvasElement_getContext canvas "2d")]
+      (CanvasRenderingContext2D_fillRect ctx 0 0 50 50)))
 ```
 
 See it working [here](https://wasplang.github.io/wasp/examples/canvas/index.html)
@@ -78,8 +73,7 @@ It's often important for a web assembly modules to have some sort of global data
 (defn run_my_game
   ...
   (mem32 high_score (+ (mem32 high_score) 100)  
-  ...
-)
+  ...)
 ```
 
 # Project Management
@@ -123,13 +117,11 @@ When necessary, low level web assembly can be directly inlined
   ; b = tmp
   LOCAL_GET   2
   LOCAL_SET   1
-  END
-)
+  END )
 
 (defn main "main" []
   ...
-  (memswap 10, 20)
-)
+  (memswap 10, 20) )
 ```
 
 # Technical Details

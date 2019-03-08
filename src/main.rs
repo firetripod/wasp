@@ -155,8 +155,8 @@ fn main() -> Result<(), Error> {
                 let mut idx = include_str!("static/index.html").to_string();
                 idx = idx.replace("PROJECT_NAME", &f);
                 file.write_all((&idx).as_bytes())?;
-                let no_std = matches.value_of("no-std");
-                if no_std.is_none() {
+                let no_std = matches.is_present("no-std");
+                if !no_std {
                     std::process::Command::new("git")
                         .args(&["clone", "git@github.com:wasplang/std.git", &format!("{}/vendor/{}", f,"std")])
                         .output()

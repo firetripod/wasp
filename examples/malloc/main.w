@@ -22,10 +22,8 @@
   LOCAL_GET   1
   I32_CONST   5
   I32_ADD
-  END
-)
+  END)
 
 (def size 20)
 (defn main "main" []
-  (malloc size)
-)
+  (malloc size))

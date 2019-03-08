@@ -61,7 +61,7 @@ pub struct OperationFunctionCall {
 
 #[derive(Debug, Clone)]
 pub struct OperationLet {
-    pub bindings: Vec<(String,Expression)>,
+    pub bindings: Vec<(String, Expression)>,
     pub expressions: Vec<Expression>,
 }
 
@@ -73,7 +73,7 @@ pub enum Expression {
     FunctionCall(OperationFunctionCall),
     Number(i32),
     EmptyList,
-    Let(OperationLet)
+    Let(OperationLet),
 }
 
 #[derive(Debug, Clone)]

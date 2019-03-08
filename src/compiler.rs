@@ -254,21 +254,18 @@ impl Compiler {
             .ast
             .children
             .iter()
-            .map(|x| match x {
+            .filter_map(|x| match x {
                 TopLevelOperation::ExternalFunction(x) => Some(x),
                 _ => None,
             })
-            .filter(|x| x.is_some())
-            .map(|x| x.unwrap())
             .collect::<Vec<&ExternalFunction>>();
 
         let mut imports = vec![];
-        for i in 0..import_defs.len() {
-            let x = import_defs[i];
-            self.function_names.push(x.name.clone());
+        for def in import_defs {
+            self.function_names.push(def.name.clone());
             imports.push(Import::new(
-                x.name.clone(),
-                x.params.iter().map(|_| DataType::I32).collect(),
+                def.name.clone(),
+                def.params.iter().map(|_| DataType::I32).collect(),
                 Some(DataType::I32),
             ))
         }
@@ -277,13 +274,11 @@ impl Compiler {
             .ast
             .children
             .iter()
-            .map(|x| match x {
+            .filter_map(|x| match x {
                 TopLevelOperation::DefineFunction(_) => Some(x.clone()),
                 TopLevelOperation::DefineWasmFunction(_) => Some(x.clone()),
                 _ => None,
             })
-            .filter(|x| x.is_some())
-            .map(|x| x.unwrap().clone())
             .collect::<Vec<TopLevelOperation>>();
 
         self.wasm.add_table(wasmly::Table::new(5, 5));
@@ -294,16 +289,14 @@ impl Compiler {
             .ast
             .children
             .iter()
-            .map(|x| match x {
+            .filter_map(|x| match x {
                 TopLevelOperation::DefineGlobal(x) => Some(x),
                 _ => None,
             })
-            .filter(|x| x.is_some())
-            .map(|x| x.unwrap().clone())
             .collect::<Vec<crate::ast::Global>>();
-        for i in 0..global_defs.len() {
-            self.global_names.push(global_defs[i].name.clone());
-            let v = self.get_global_value(&global_defs[i].value);
+        for def in global_defs {
+            self.global_names.push(def.name.clone());
+            let v = self.get_global_value(&def.value);
             self.global_values.push(v);
         }
     }
@@ -321,7 +314,7 @@ impl Compiler {
             let b = self.int_to_bytes(v);
             bytes.extend_from_slice(&b);
         }
-        return self.create_data(bytes);
+        self.create_data(bytes)
     }
 
     fn get_global_value(&mut self, v: &GlobalValue) -> i32 {
@@ -366,7 +359,7 @@ impl Compiler {
                     function.with_name(&x);
                 }
                 function.with_inputs(function_def.params.clone());
-                if function_def.outputs.len() > 0 {
+                if !function_def.outputs.is_empty() {
                     function.with_output(function_def.outputs[0].clone())
                 }
                 self.function_implementations.push(function);
@@ -376,10 +369,13 @@ impl Compiler {
 
     fn set_heap_start(&mut self) {
         //set global heap once we know what it should be
-        let mut final_heap_pos = self.heap_position;
-        if self.heap_position % 4 != 0 {
-            final_heap_pos = (self.heap_position / 4) * 4 + 4;
-        }
+        let final_heap_pos = {
+            if self.heap_position % 4 != 0 {
+                (self.heap_position / 4) * 4 + 4
+            } else {
+                self.heap_position
+            }
+        };
         self.wasm
             .add_global(wasmly::Global::new(final_heap_pos as i32, false));
         self.wasm
@@ -410,7 +406,10 @@ impl Compiler {
         // look this up in reverse so shadowing works
         let mut p = self.local_names.iter().rev().position(|r| r == id);
         if p.is_some() {
-            return (self.local_names.len() as i32 - 1 - p.unwrap() as i32, IdentifierType::Local);
+            return (
+                self.local_names.len() as i32 - 1 - p.unwrap() as i32,
+                IdentifierType::Local,
+            );
         }
         p = self.global_names.iter().position(|r| r == id);
         if p.is_some() {
@@ -419,25 +418,21 @@ impl Compiler {
         panic!(format!("could not find identifier \"{}\"", id))
     }
 
-    fn process_wasm(&mut self, i: usize, e: &Vec<WasmOperation>) {
-        let wasm = e
-            .iter()
-            .map(|x| to_wasm(x.clone()))
-            .filter(|x| x.is_some())
-            .map(|x| x.unwrap())
-            .collect();
+    fn process_wasm(&mut self, i: usize, e: &[WasmOperation]) {
+        let wasm = e.iter().filter_map(|x| to_wasm(x.clone())).collect();
         self.function_implementations[i].with_instructions(wasm);
     }
 
+    #[allow(clippy::cyclomatic_complexity)]
     fn process_expression(&mut self, i: usize, e: &Expression) {
         match e {
             Expression::Let(x) => {
-                for j in 0..x.bindings.len(){
+                for j in 0..x.bindings.len() {
                     let binding = &x.bindings[j];
                     self.process_expression(i, &binding.1);
                     self.function_implementations[i].with_local(DataType::I32);
                     self.function_implementations[i]
-                        .with_instructions(vec![LOCAL_SET,(self.local_names.len() as u32).into()]);
+                        .with_instructions(vec![LOCAL_SET, (self.local_names.len() as u32).into()]);
                     self.local_names.push((&binding.0).to_string());
                 }
                 for k in 0..x.expressions.len() {
@@ -449,7 +444,7 @@ impl Compiler {
             }
             Expression::FunctionCall(x) => {
                 if &x.function_name == "do" {
-                    if x.params.len() > 0 {
+                    if !x.params.is_empty() {
                         for k in 0..x.params.len() {
                             self.process_expression(i, &x.params[k]);
                             if k != x.params.len() - 1 {
@@ -460,7 +455,7 @@ impl Compiler {
                         panic!("useless do detected")
                     }
                 } else if &x.function_name == "loop" {
-                    if x.params.len() > 0 {
+                    if !x.params.is_empty() {
                         self.function_implementations[i]
                             .with_instructions(vec![BLOCK, EMPTY, LOOP, EMPTY]);
                         for k in 0..x.params.len() {
@@ -484,12 +479,12 @@ impl Compiler {
                         panic!("useless infinite loop detected")
                     }
                 } else if &x.function_name == "break" {
-                    if x.params.len() > 0 {
+                    if !x.params.is_empty() {
                         panic!("break has no parameters")
                     }
                     self.function_implementations[i].with_instructions(vec![BR, 2.into()]);
                 } else if &x.function_name == "continue" {
-                    if x.params.len() > 0 {
+                    if !x.params.is_empty() {
                         panic!("continue has no parameters")
                     }
                     self.function_implementations[i].with_instructions(vec![BR, 0.into()]);

@@ -38,7 +38,7 @@ Open up http://localhost:8080 and look in console. At this point we will have a 
 
 If you don't have need for the standard library (or want to write your own!). This is also an option.
 
-```
+```console
 wasp init myproject --no-std
 ```
 

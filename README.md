@@ -111,6 +111,7 @@ bar git@github.com:richardanaya/bar.git@specific-bar
 would result in these commands (roughly)
 
 ```
+rm -rf vendor
 mkdir vendor
 git clone git@github.com:richardanaya/bar.git@specific-bar vendor/bar
 ```

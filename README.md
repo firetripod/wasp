@@ -44,6 +44,24 @@ wasp init myproject --no-std
 
 At this point we will have a web assembly module with a single exported main function and nothing else.
 
+# Using the standard library
+
+Right now the standard library does not have much at all. But one thing most people are interested in from Lisp is a cons.
+
+```clojure
+(defn main [] (cons 42())) ; returns the memory location of cons
+```
+```clojure
+(defn main [] (head (cons 42()))) ; return the head value 42
+```
+```clojure
+(defn main [] (head (cons 42()))) ; returns the memory location of tail
+```
+
+```clojure
+(defn main [] (cons 1 (cons 2 (cons 3())))) ; retrns a linked list
+```
+
 # Drawing
 
 Using [wasm-module](https://github.com/richardanaya/wasm-module) we can easily draw something to screen.

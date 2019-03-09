@@ -62,6 +62,8 @@ Right now the standard library does not have much at all. But one thing most peo
 (defn main [] (cons 1 (cons 2 (cons 3())))) ; retrns a linked list
 ```
 
+If you think your standard library is out of date, just run `wasp vendor`
+
 # Drawing
 
 Using [wasm-module](https://github.com/richardanaya/wasm-module) we can easily draw something to screen.

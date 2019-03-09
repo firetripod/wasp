@@ -32,9 +32,9 @@ cargo install wasp
 wasp init myproject
 cd myproject
 wasp build
-http-server -p 8080 .
+python3 -m http.server
 ```
-Open up http://localhost:8080 and look in console. At this point we will have a web assembly module that has access to the [standard libraries](https://github.com/wasplang/std) functions.  More to come in this area!
+Open up http://localhost:8000 and look in console. At this point we will have a web assembly module that has access to the [standard libraries](https://github.com/wasplang/std) functions.  More to come in this area!
 
 If you don't have need for the standard library (or want to write your own!). This is also an option.
 

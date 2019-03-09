@@ -115,7 +115,7 @@ mkdir vendor
 git clone git@github.com:richardanaya/bar.git@specific-bar vendor/bar
 ```
 
-when `wasp build` is called
+when `wasp vendor` is called
 
 Now, when wasp compiles your code, it does a few things.
 

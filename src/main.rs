@@ -13,6 +13,8 @@ use clap::{App, AppSettings, Arg, SubCommand};
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader};
 
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
 fn write_output(bytes: &[u8], output_file: Option<&str>) -> std::io::Result<()> {
     if output_file.is_none() {
         let path = env::current_dir().unwrap();
@@ -38,7 +40,7 @@ fn run(content: &str) -> Result<Vec<u8>, Error> {
 fn main() -> Result<(), Error> {
     let matches = App::new("wasp")
         .setting(AppSettings::ArgRequiredElseHelp)
-        .version("0.1.6")
+        .version(VERSION)
         .about("A lisp for web assembly")
         .author("Richard Anaya")
         .subcommand(

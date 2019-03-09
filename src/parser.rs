@@ -9,11 +9,11 @@ fn to_string(s: CompleteStr) -> String {
 }
 
 fn is_start_identifier_char(c: char) -> bool {
-    c == '_' || c.is_alphabetic()
+    c == '_' || c == '$' || c.is_alphabetic()
 }
 
 fn is_identifier_char(c: char) -> bool {
-    c == '_' || c == '!' || c.is_alphanumeric()
+    c == '_' || c == '!' || c == '-' || c == '$' || c.is_alphanumeric()
 }
 
 fn is_text_char(c: char) -> bool {

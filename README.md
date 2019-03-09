@@ -90,11 +90,11 @@ See it working [here](https://wasplang.github.io/wasp/examples/canvas/index.html
 It's often important for a web assembly modules to have some sort of global data that can be changed.  For instance in a game we might have a high score.
 
 ```clojure
-(def high-score (data 0) )
+(def high_score (data 0) )
 
-(defn run-my-game
+(defn run_my_game
   ...
-  (mem32 high-score (+ (mem32 high-score) 100)  
+  (mem32 high_score (+ (mem32 high_score) 100)  
   ...)
 ```
 

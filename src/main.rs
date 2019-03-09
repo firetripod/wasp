@@ -38,7 +38,7 @@ fn run(content: &str) -> Result<Vec<u8>, Error> {
 fn main() -> Result<(), Error> {
     let matches = App::new("wasp")
         .setting(AppSettings::ArgRequiredElseHelp)
-        .version("0.0.2")
+        .version("0.1.5")
         .about("A lisp for web assembly")
         .author("Richard Anaya")
         .subcommand(

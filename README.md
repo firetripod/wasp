@@ -55,7 +55,7 @@ Right now the standard library does not have much at all. But one thing most peo
 (defn main [] (head (cons 42()))) ; return the head value 42
 ```
 ```clojure
-(defn main [] (head (cons 42()))) ; returns the memory location of tail
+(defn main [] (tail (cons 42()))) ; returns the memory location of tail
 ```
 
 ```clojure

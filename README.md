@@ -49,17 +49,17 @@ At this point we will have a web assembly module with a single exported main fun
 Right now the standard library does not have much at all. But one thing most people are interested in from Lisp is a cons.
 
 ```clojure
-(defn main [] (cons 42())) ; returns the memory location of cons
+(defn main [] (cons 42 ())) ; returns the memory location of cons
 ```
 ```clojure
-(defn main [] (head (cons 42()))) ; return the head value 42
+(defn main [] (head (cons 42 ()))) ; return the head value 42
 ```
 ```clojure
-(defn main [] (tail (cons 42()))) ; returns the memory location of tail
+(defn main [] (tail (cons 42 ()))) ; returns the memory location of tail
 ```
 
 ```clojure
-(defn main [] (cons 1 (cons 2 (cons 3())))) ; returns a linked list
+(defn main [] (cons 1 (cons 2 (cons 3 ())))) ; returns a linked list
 ```
 
 If you think your standard library is out of date, just run `wasp vendor`

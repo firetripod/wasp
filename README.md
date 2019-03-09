@@ -59,7 +59,7 @@ Right now the standard library does not have much at all. But one thing most peo
 ```
 
 ```clojure
-(defn main [] (cons 1 (cons 2 (cons 3())))) ; retrns a linked list
+(defn main [] (cons 1 (cons 2 (cons 3())))) ; returns a linked list
 ```
 
 If you think your standard library is out of date, just run `wasp vendor`

@@ -1,5 +1,5 @@
-# WASP 🐝
-a LISP programming language for extremely performant and concise web assembly modules
+# Wasp 🐝
+a Lisp programming language for extremely performant and concise web assembly modules
 
 **warning:** this compiler is very alpha and error messages aren't the best, but it works and language is simple!
 
@@ -70,11 +70,11 @@ See it working [here](https://wasplang.github.io/wasp/examples/canvas/index.html
 It's often important for a web assembly modules to have some sort of global data that can be changed.  For instance in a game we might have a high score.
 
 ```clojure
-(def high_score (data 0) )
+(def high-score (data 0) )
 
-(defn run_my_game
+(defn run-my-game
   ...
-  (mem32 high_score (+ (mem32 high_score) 100)  
+  (mem32 high-score (+ (mem32 high-score) 100)  
   ...)
 ```
 

@@ -11,7 +11,7 @@ a Lisp programming language for extremely performant and concise web assembly mo
 ```
 
 # Features
-* [x] immutable c-strings, memory manipulation, global variables, imported functions
+* [x] immutable c-strings, memory manipulation, global variables, imported functions, 1st class functions
 * [x] optional standard library runtime
 * [x] functions with inline web assembly
 * [ ] easy project dependency management
